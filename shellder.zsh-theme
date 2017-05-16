@@ -14,6 +14,9 @@ SHELLDER_CONTEXT_FG=${SHELLDER_CONTEXT_FG:-250}
 SHELLDER_DIRECTORY_BG=${SHELLDER_DIRECTORY_BG:-234}
 SHELLDER_DIRECTORY_FG=${SHELLDER_DIRECTORY_FG:-231}
 
+SHELLDER_PROFILE_BG=${SHELLDER_PROFILE_BG:-'green'}
+SHELLDER_PROFILE_FG=${SHELLDER_PROFILE_FG:-'black'}
+
 SHELLDER_GIT_CLEAN_BG=${SHELLDER_GIT_CLEAN_BG:-'green'}
 SHELLDER_GIT_CLEAN_FG=${SHELLDER_GIT_CLEAN_FG:-'black'}
 SHELLDER_GIT_DIRTY_BG=${SHELLDER_GIT_DIRTY_BG:-202}
@@ -73,6 +76,20 @@ prompt_context() {
       prompt="%(!.%{%F{yellow}%}.)%m"
     fi
     prompt_segment $SHELLDER_CONTEXT_BG $SHELLDER_CONTEXT_FG $prompt
+  fi
+}
+
+# Profile: if there's an active profile, will be shown here
+prompt_profile() {
+  if [[ -n "${ACTIVE_PROFILE}" ]]; then
+    local PROFILE_CHAR
+
+    () {
+      local LC_ALL="" LC_CTYPE="en_US.UTF-8"
+      PROFILE_CHAR=$'\u270D' # ✍
+    }
+
+    prompt_segment $SHELLDER_PROFILE_BG $SHELLDER_PROFILE_FG "${PROFILE_CHAR} ${ACTIVE_PROFILE}"
   fi
 }
 
@@ -208,6 +225,7 @@ build_prompt() {
   prompt_virtualenv
   prompt_context
   prompt_dir
+  prompt_profile
   prompt_git
   prompt_hg
   prompt_end
